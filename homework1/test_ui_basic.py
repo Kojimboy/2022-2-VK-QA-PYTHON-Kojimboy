@@ -35,6 +35,7 @@ class TestInvalidLogin(BaseCase):
 
 @pytest.mark.parametrize("registered_email, valid_password", [("mr-nicko2011@Yandex.ru", "Test_password123!"),
                                                               ])
+@pytest.mark.UI
 class TestLoggedInUser(BaseCase):
     def test_logout(self, registered_email, valid_password):
         assert "myTarget" in self.driver.title
