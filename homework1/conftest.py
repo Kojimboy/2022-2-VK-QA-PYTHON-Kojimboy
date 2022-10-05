@@ -32,7 +32,7 @@ def driver(config, request):
     else:
         chrome_options.add_argument('--start-maximized')
     if browser == "chrome":
-        driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().install()),
+        driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager("105.0.5195.19").install()),
                                   options=chrome_options)
 
     driver.get(url)

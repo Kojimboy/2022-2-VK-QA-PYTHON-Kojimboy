@@ -1,11 +1,9 @@
 import pytest
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from base import BaseCase
 from ui.locators import basic_locators
-import time
 
 
 @pytest.mark.parametrize("registered_email, valid_password", [("mr-nicko2011@Yandex.ru", "Test_password123!"),
@@ -50,11 +48,19 @@ class TestLoggedInUser(BaseCase):
         assert "myTarget" in self.driver.title
         self.login(registered_email, valid_password)
         self.edit_profile(fio, phone_number)
-        suc = self.find(*basic_locators.EDIT_SUCCESS_MESSAGE)
-        assert WebDriverWait(self, 5).until(EC.visibility_of(suc))  # проверка появления сообщения об успешном
-        # сохранении изменении
+        success_message = self.find(*basic_locators.EDIT_SUCCESS_MESSAGE)
+        assert WebDriverWait(self, 5).until(EC.visibility_of(success_message))  # проверка появления сообщения об
+        # успешном сохранении изменении
         self.driver.refresh()
         updated_user_name = self.find(*basic_locators.AUTORIZED_USER_NAME_IN_RIGHT_MODULE)
         assert updated_user_name.get_attribute("title") == fio
 
-    # def test_page_transition(self):
+    @pytest.mark.parametrize("locator, assert_locator",
+                             [(basic_locators.AUDITIONS_BUTTON, basic_locators.AUDITIONS_ASSERT_LOCATOR),
+                              (basic_locators.BILLING_BUTTON, basic_locators.BILLING_ASSERT_LOCATOR),
+                              ])
+    def test_page_transition(self, registered_email, valid_password, locator, assert_locator):
+        assert "myTarget" in self.driver.title
+        self.login(registered_email, valid_password)
+        self.change_page(locator)
+        assert self.find(*assert_locator)

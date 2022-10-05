@@ -1,15 +1,9 @@
-import time
-
 import pytest
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
 from ui.locators import basic_locators
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
-
-CLICK_RETRY = 3
 
 
 class BaseCase:
@@ -25,26 +19,8 @@ class BaseCase:
         except NoSuchElementException:
             assert False, f"No element found with locator {what}"
 
-    def is_element_displayed(self, element):
-        if not element.is_displayed():
-            assert False, "element is not visible"
-
-    # def click(self, locator):
-    #     for i in range(CLICK_RETRY):
-    #         try:
-    #             elem = self.find(*locator)
-    #
-    #             if i < 2:
-    #                 self.driver.refresh()
-    #             elem.click()
-    #             return
-    #         except StaleElementReferenceException:
-    #             if i == CLICK_RETRY - 1:
-    #                 raise
-
     def login(self, email, password):
         login_button = self.find(*basic_locators.LOGIN_LOCATOR)
-        self.is_element_displayed(login_button)
         login_button.click()
         assert "authForm-module-title" in self.driver.page_source
         login_input = self.find(*basic_locators.LOGIN_INPUT)
@@ -60,7 +36,10 @@ class BaseCase:
         right_module_wrap = self.find(*basic_locators.AUTORIZED_USER_RIGHT_MODULE)
         right_module_wrap.click()
         logout_button = self.find(*basic_locators.LOGOUT_BUTTON)
+        right_drop_menu = self.find(*basic_locators.RIGHT_DROP_MENU)
         try:
+            WebDriverWait(self, 5).until(
+                EC.element_to_be_clickable(right_drop_menu))
             logout_button.click()
         except StaleElementReferenceException:
             right_module_wrap = self.find(*basic_locators.AUTORIZED_USER_RIGHT_MODULE)
@@ -86,3 +65,11 @@ class BaseCase:
         phone_input.send_keys(phone_number)
         save_button = self.find(*basic_locators.EDIT_SAVE_BUTTON)
         save_button.click()
+
+    def change_page(self, locator):
+        button = self.find(*locator)
+        try:
+            button.click()
+        except StaleElementReferenceException:
+            button = self.find(*locator)
+            button.click()
