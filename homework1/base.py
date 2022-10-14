@@ -1,9 +1,10 @@
 import pytest
-from selenium.webdriver.support.wait import WebDriverWait
-from ui.locators import basic_locators
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from ui.locators import basic_locators
 
 
 class BaseCase:
@@ -33,7 +34,7 @@ class BaseCase:
         login_button.click()
 
     def logout(self):
-        right_module_wrap = self.find(*basic_locators.AUTORIZED_USER_RIGHT_MODULE)
+        right_module_wrap = self.find(*basic_locators.AUTHORIZED_USER_RIGHT_MODULE)
         right_module_wrap.click()
         logout_button = self.find(*basic_locators.LOGOUT_BUTTON)
         right_drop_menu = self.find(*basic_locators.RIGHT_DROP_MENU)
@@ -42,7 +43,7 @@ class BaseCase:
                 EC.element_to_be_clickable(right_drop_menu))
             logout_button.click()
         except StaleElementReferenceException:
-            right_module_wrap = self.find(*basic_locators.AUTORIZED_USER_RIGHT_MODULE)
+            right_module_wrap = self.find(*basic_locators.AUTHORIZED_USER_RIGHT_MODULE)
             right_module_wrap.click()
             logout_button = self.find(*basic_locators.LOGOUT_BUTTON)
             right_drop_menu = self.find(*basic_locators.RIGHT_DROP_MENU)

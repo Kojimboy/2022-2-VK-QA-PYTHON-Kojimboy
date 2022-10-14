@@ -1,6 +1,6 @@
 import pytest
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from base import BaseCase
 from ui.locators import basic_locators
@@ -13,7 +13,7 @@ class TestValidLogin(BaseCase):
     def test_valid_login(self, registered_email, valid_password):
         assert "myTarget" in self.driver.title
         self.login(registered_email, valid_password)
-        assert self.find(*basic_locators.AUTORIZED_USER_RIGHT_MODULE)
+        assert self.find(*basic_locators.AUTHORIZED_USER_RIGHT_MODULE)
 
 
 @pytest.mark.UI
@@ -53,7 +53,7 @@ class TestLoggedInUser(BaseCase):
         assert WebDriverWait(self, 5).until(EC.visibility_of(success_message))  # проверка появления сообщения об
         # успешном сохранении изменении
         self.driver.refresh()
-        updated_user_name = self.find(*basic_locators.AUTORIZED_USER_NAME_IN_RIGHT_MODULE)
+        updated_user_name = self.find(*basic_locators.AUTHORIZED_USER_NAME_IN_RIGHT_MODULE)
         assert updated_user_name.get_attribute("title") == fio
 
     @pytest.mark.parametrize("locator, assert_locator",
