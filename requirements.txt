@@ -1,3 +1,6 @@
+allure_python_commons
 pytest
 selenium
 webdriver_manager
+allure-pytest
+pytest-xdist

@@ -66,3 +66,8 @@ def temp_dir(request):
     test_dir = os.path.join(request.config.base_temp_dir, var)
     os.makedirs(test_dir)
     return test_dir
+
+
+# костыль чтобы русские символы нормально отображались в parametrize
+def pytest_make_parametrize_id(config, val):
+    return repr(val)
