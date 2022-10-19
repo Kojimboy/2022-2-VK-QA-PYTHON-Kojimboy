@@ -1,4 +1,4 @@
-import time
+import allure
 
 from ui.locators import basic_locators
 from ui.pages.base_page import BasePage
@@ -6,13 +6,10 @@ from ui.pages.base_page import BasePage
 
 class CampaignPage(BasePage):
     locators = basic_locators.CampaignPageLocators()
-    url = 'https://target-sandbox.my.com/campaigns'
+    url = 'https://target-sandbox.my.com/dashboard#'
 
-    def checking(self):
+    @allure.step("Step 3 get created campaign name for assertion")
+    def get_created_campaign_name(self):
         self.driver.get(CampaignPage.url)
-        assert self.find(self.locators.OBJECTIVE)
-        self.find(self.locators.OBJECTIVE).click()
-        time.sleep(10)
-        return CampaignPage(self.driver)
-
-
+        cell = self.find(self.locators.TOP_CAMPAIGN_CELL)
+        return cell.get_attribute("title")

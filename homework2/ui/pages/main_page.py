@@ -1,10 +1,8 @@
-import allure
 from ui.locators import basic_locators
 from ui.pages.base_page import BasePage
 
 
 class MainPage(BasePage):
-
     locators = basic_locators.MainPageLocators()
     url = 'https://target-sandbox.my.com/'
 
@@ -21,4 +19,3 @@ class MainPage(BasePage):
         login_button = self.find(self.locators.LOGIN_BUTTON)
         login_button.click()
         return BasePage(self.driver)
-

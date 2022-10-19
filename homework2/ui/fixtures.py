@@ -5,12 +5,16 @@ import sys
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
+
 from ui.pages.base_page import BasePage
 from ui.pages.campaign_page import CampaignPage
 from ui.pages.main_page import MainPage
 from ui.pages.new_campaign_page import NewCampaignPage
+from ui.pages.new_segment_page import NewSegmentPage
+from ui.pages.segment_page import SegmentPage
 
 
 def pytest_configure(config):
@@ -27,7 +31,7 @@ def pytest_configure(config):
 
 
 @pytest.fixture()
-def driver(config, temp_dir, request):  # настройки драйвера с условиями
+def driver(config, temp_dir, request):  # настройки базового драйвера с условиями
     browser = config['browser']
     url = config['url']
     headless = config["headless"]
@@ -35,6 +39,7 @@ def driver(config, temp_dir, request):  # настройки драйвера с
     # vnc = config['vnc']
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {"download.default_directory": temp_dir})
+    chrome_options.add_argument("force-device-scale-factor=1")  # для масштаба системы 100%
     if request.config.getoption("--headless"):
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-dev-shm-usage')
@@ -52,7 +57,7 @@ def driver(config, temp_dir, request):  # настройки драйвера с
     #         desired_capabilities=capabilities
     #     )
     if browser == 'chrome':
-        driver = webdriver.Chrome(executable_path=ChromeDriverManager("105.0.5195.19").install(),
+        driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager("105.0.5195.19").install()),
                                   options=chrome_options)
     elif browser == 'firefox':
         driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
@@ -65,24 +70,21 @@ def driver(config, temp_dir, request):  # настройки драйвера с
     driver.quit()
 
 
-def get_driver(browser_name):  # Драйвер для куки
+def get_driver(browser_name, request):  # Драйвер для куки и логина
+    chrome_options = Options()
+    if request.config.getoption("--headless"):
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--window-size=1920,1080')
     if browser_name == 'chrome':
-        browser = webdriver.Chrome(executable_path=ChromeDriverManager("105.0.5195.19").install())
+        browser = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager("105.0.5195.19").install()),
+                                   options=chrome_options)
     elif browser_name == 'firefox':
         browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     else:
         raise RuntimeError(f'Unsupported browser: "{browser_name}"')
     browser.maximize_window()
     return browser
-
-
-@pytest.fixture(scope='session', params=['chrome', 'firefox'])
-def all_drivers(config, request):
-    url = config['url']
-    browser = get_driver(request.param)
-    browser.get(url)
-    yield browser
-    browser.quit()
 
 
 @pytest.fixture
@@ -103,3 +105,13 @@ def campaign_page(driver):
 @pytest.fixture
 def new_campaign_page(driver):
     return NewCampaignPage(driver=driver)
+
+
+@pytest.fixture
+def segment_page(driver):
+    return SegmentPage(driver=driver)
+
+
+@pytest.fixture
+def new_segment_page(driver):
+    return NewSegmentPage(driver=driver)

@@ -1,4 +1,5 @@
 import logging
+
 from ui.fixtures import *
 
 
@@ -61,7 +62,7 @@ def base_temp_dir():
 @pytest.fixture(scope='function')
 def temp_dir(request):
     var = request._pyfuncitem.nodeid
-    var = var.replace("/", "_").replace(":", "_")
+    var = var.replace("/", "_").replace(":", "_").replace(" ", "_")  # исправляем путь для windows
     test_dir = os.path.join(request.config.base_temp_dir, var)
     os.makedirs(test_dir)
     return test_dir
