@@ -41,8 +41,8 @@ class ApiBase:
 
     @pytest.fixture(scope='function')
     def campaign(self):
-        campaign_data = self.builder.segment()
-        campaign_id = self.create_campaign(campaign_name=campaign_data.segment_name,
+        campaign_data = self.builder.campaign()
+        campaign_id = self.create_campaign(campaign_name=campaign_data.campaign_name,
                                            banner_name=campaign_data.banner_name)
         campaign_data.id = campaign_id
         # до теста
@@ -59,7 +59,7 @@ class ApiBase:
         # до теста
         yield segment_data
         # после теста
-        time.sleep(15)
+        # time.sleep(15)
         self.api_client.post_segment_delete(segment_id)
         assert self.check_top_segment_id(segment_id=segment_id) is False
 

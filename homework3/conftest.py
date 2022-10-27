@@ -21,7 +21,7 @@ def config(request):
 
 @pytest.fixture(scope='session')
 def credentials():  # Берем почту и пароль с файла
-    with open('files/valid_creds.txt', 'r') as f:
+    with open('homework3/files/valid_creds.txt', 'r') as f:
         user = f.readline().strip()
         password = f.readline().strip()
     return user, password

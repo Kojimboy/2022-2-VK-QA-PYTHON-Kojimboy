@@ -60,9 +60,9 @@ class ApiClient:
         location = urljoin("https://auth-ac.my.com", "auth")
         login_request = self._request(method='POST', location=location, headers=headers, data=data, jsonify=False,
                                       expected_status=404)
-        s = open('files/res.html', 'w+')
-        s.write(login_request.text)
-        s.close()
+        # s = open('files/res.html', 'w+')
+        # s.write(login_request.text)
+        # s.close()
         # print(login_request.history)
         # print(login_request.cookies.get_dict())
         # print(self.session.cookies)

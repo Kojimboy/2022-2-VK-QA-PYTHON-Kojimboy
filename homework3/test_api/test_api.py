@@ -14,7 +14,7 @@ class TestApiLogin(ApiBase):
                'https://target-sandbox.my.com/profile/contacts'
 
 
-@pytest.mark.skip('skip')
+# @pytest.mark.skip('skip')
 @pytest.mark.API
 class TestCampaignApi(ApiBase):
     def test_campaign_creation_deletion(self, campaign):
