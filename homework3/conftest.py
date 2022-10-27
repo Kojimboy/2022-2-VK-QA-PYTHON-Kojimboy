@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from api.client import ApiClient
@@ -5,7 +7,7 @@ from api.client import ApiClient
 
 def pytest_addoption(parser):
     parser.addoption("--browser", default="chrome")
-    parser.addoption("--url", default="https://auth-ac.my.com/auth")
+    parser.addoption("--url", default="https://target-sandbox.my.com/")
     parser.addoption('--headless', action='store_true')
 
 
