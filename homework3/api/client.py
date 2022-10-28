@@ -83,8 +83,7 @@ class ApiClient:
         }
 
         location = urljoin(self.base_url, 'api/v2/campaigns.json')
-        create_campaign_request = self._request(method='POST', location=location, json=data, headers=headers,
-                                                expected_status=200)
+        create_campaign_request = self._request(method='POST', location=location, json=data, headers=headers)
         return create_campaign_request
 
     def get_top_active_campaign_id(self):
@@ -135,9 +134,17 @@ class ApiClient:
 
         return segments_request
 
-    def post_segment_create(self, segment_name):
+    def post_segment_create(self, segment_name, object_type, source_id=None):
         headers = {
             'X-CSRFToken': f'{self.session.cookies["csrftoken"]}'
+        }
+        params = {
+            'source_id': source_id,
+            'type': 'positive',
+        } if source_id else {
+            'type': 'positive',
+            'left': 365,
+            'right': 0,
         }
 
         data = {
@@ -145,15 +152,10 @@ class ApiClient:
             'pass_condition': 1,
             'relations': [
                 {
-                    'object_type': 'remarketing_player',
-                    'params': {
-                        'type': 'positive',
-                        'left': 365,
-                        'right': 0,
-                    },
+                    'object_type': object_type,
+                    "params": params,
                 },
             ],
-            # 'logicType': 'or',
         }
 
         location = urljoin(self.base_url, 'api/v2/remarketing/segments.json')
@@ -178,3 +180,60 @@ class ApiClient:
         delete_segment_request = self._request(method='POST', location=location, json=data, headers=headers,
                                                jsonify=False)
         return delete_segment_request
+
+    def get_vk_source_id_in_search(self, url):
+        headers = {
+
+        }
+
+        params = {
+            '_q': url,
+        }
+
+        location = urljoin(self.base_url, "api/v2/vk_groups.json")
+        vk_source_request = self._request(method="GET", location=location, params=params, data=None, headers=headers)
+
+        return vk_source_request
+
+    def post_vk_source_create(self, vk_id):
+        headers = {
+            'X-CSRFToken': f'{self.session.cookies["csrftoken"]}'
+        }
+
+        data = {
+            'items': [
+                {
+                    'object_id': vk_id,
+                },
+            ],
+        }
+
+        location = urljoin(self.base_url, 'api/v2/remarketing/vk_groups/bulk.json')
+        create_source_request = self._request(method='POST', location=location, json=data, headers=headers,
+                                              expected_status=201)
+        return create_source_request
+
+    def post_source_delete(self, vk_id):
+        headers = {
+            "X-CSRFToken": f'{self.session.cookies["csrftoken"]}',
+        }
+
+        location = urljoin(self.base_url, f"api/v2/remarketing/vk_groups/{vk_id}.json")
+
+        delete_source_request = self._request(method='DELETE', location=location, headers=headers, expected_status=204,jsonify=False)
+        return delete_source_request
+
+    def get_vk_source_id_in_list(self):
+        headers = {
+
+        }
+
+        params = {
+            'fields': 'id',
+            'limit': '50',
+        }
+
+        location = urljoin(self.base_url, "api/v2/remarketing/vk_groups.json")
+        sources_request = self._request(method="GET", location=location, params=params, data=None, headers=headers)
+
+        return sources_request

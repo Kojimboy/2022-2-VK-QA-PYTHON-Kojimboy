@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from api.client import ApiClient
@@ -30,3 +28,7 @@ def credentials():  # Берем почту и пароль с файла
 @pytest.fixture(scope='session')
 def api_client(credentials, config):
     return ApiClient(base_url=config['url'], email=credentials[0], password=credentials[1])
+
+
+def pytest_make_parametrize_id(config, val):
+    return repr(val)

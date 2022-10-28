@@ -18,15 +18,21 @@ class TestApiLogin(ApiBase):
 @pytest.mark.API
 class TestCampaignApi(ApiBase):
     def test_campaign_creation_deletion(self, campaign):
-        # print(campaign.campaign_name)
-        # print(campaign.banner_name)
         print(f"created id is {campaign.id}")
         assert self.check_active_top_campaign_id(campaign.id) is True
 
 
 @pytest.mark.API
 class TestSegmentApi(ApiBase):
+
+    @pytest.mark.parametrize("object_type, url", [("remarketing_player", None), ])
     def test_segment_creation_deletion(self, segment):
-        print(segment.segment_name)
         print(f"created id is {segment.id}")
-        print(self.check_top_segment_id(segment.id))
+        assert self.check_top_segment_id(segment.id) is True
+
+    @pytest.mark.parametrize("object_type, url", [("remarketing_vk_group", "https://vk.com/vkedu"), ])
+    def test_vk_ok_source_segment_creation_deletion(self, segment, source):
+        print(f"created id is {segment.id}")
+        assert self.check_top_segment_id(segment.id) is True
+        assert self.check_source(source.vk_id) is True
+        print(segment.object_type)
