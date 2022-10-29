@@ -60,12 +60,6 @@ class ApiClient:
         location = urljoin("https://auth-ac.my.com", "auth")
         login_request = self._request(method='POST', location=location, headers=headers, data=data, jsonify=False,
                                       expected_status=404)
-        # s = open('files/res.html', 'w+')
-        # s.write(login_request.text)
-        # s.close()
-        # print(login_request.history)
-        # print(login_request.cookies.get_dict())
-        # print(self.session.cookies)
         return login_request
 
     def post_campaign_create(self, campaign_name, banner_name):
@@ -213,14 +207,15 @@ class ApiClient:
                                               expected_status=201)
         return create_source_request
 
-    def post_source_delete(self, vk_id):
+    def post_vk_source_delete(self, vk_id):
         headers = {
             "X-CSRFToken": f'{self.session.cookies["csrftoken"]}',
         }
 
         location = urljoin(self.base_url, f"api/v2/remarketing/vk_groups/{vk_id}.json")
 
-        delete_source_request = self._request(method='DELETE', location=location, headers=headers, expected_status=204,jsonify=False)
+        delete_source_request = self._request(method='DELETE', location=location, headers=headers, expected_status=204,
+                                              jsonify=False)
         return delete_source_request
 
     def get_vk_source_id_in_list(self):

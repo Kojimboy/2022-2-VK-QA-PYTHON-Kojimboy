@@ -24,7 +24,7 @@ class TestCampaignApi(ApiBase):
 
 @pytest.mark.API
 class TestSegmentApi(ApiBase):
-
+    # параметры передаются в segment и в source
     @pytest.mark.parametrize("object_type, url", [("remarketing_player", None), ])
     def test_segment_creation_deletion(self, segment):
         print(f"created id is {segment.id}")
@@ -33,6 +33,6 @@ class TestSegmentApi(ApiBase):
     @pytest.mark.parametrize("object_type, url", [("remarketing_vk_group", "https://vk.com/vkedu"), ])
     def test_vk_ok_source_segment_creation_deletion(self, segment, source):
         print(f"created id is {segment.id}")
-        assert self.check_top_segment_id(segment.id) is True
         assert self.check_source(source.vk_id) is True
+        assert self.check_top_segment_id(segment.id) is True
         print(segment.object_type)

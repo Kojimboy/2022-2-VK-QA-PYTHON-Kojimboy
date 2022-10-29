@@ -1,5 +1,3 @@
-import time
-
 import pytest
 
 from api.builder import Builder
@@ -15,6 +13,18 @@ class ApiBase:
 
         if self.authorize:
             self.api_client.post_login()
+
+    @pytest.fixture(scope='function')
+    def campaign(self):
+        campaign_data = self.builder.campaign()
+        campaign_id = self.create_campaign(campaign_name=campaign_data.campaign_name,
+                                           banner_name=campaign_data.banner_name)
+        campaign_data.id = campaign_id
+        # до теста
+        yield campaign_data
+        # после теста
+        self.delete_campaign(campaign_id=campaign_id)
+        assert self.check_active_top_campaign_id(campaign_id=campaign_id) is False
 
     def create_campaign(self, campaign_name, banner_name):
         req = self.api_client.post_campaign_create(campaign_name=campaign_name, banner_name=banner_name)
@@ -38,18 +48,6 @@ class ApiBase:
         # тут засунуть проверку еще одного запроса
         assert req.status_code == 204
         return req
-
-    @pytest.fixture(scope='function')
-    def campaign(self):
-        campaign_data = self.builder.campaign()
-        campaign_id = self.create_campaign(campaign_name=campaign_data.campaign_name,
-                                           banner_name=campaign_data.banner_name)
-        campaign_data.id = campaign_id
-        # до теста
-        yield campaign_data
-        # после теста
-        self.delete_campaign(campaign_id=campaign_id)
-        assert self.check_active_top_campaign_id(campaign_id=campaign_id) is False
 
     @pytest.fixture(scope='function')
     def segment(self, object_type, source):
@@ -90,14 +88,14 @@ class ApiBase:
         source_data.object_id = source_id
 
         if url:
-            vk_source_filds_dict = self.api_client.post_vk_source_create(source_data.object_id)  # создаем группу
-            for item in vk_source_filds_dict["items"]:
+            vk_source_fields_dict = self.api_client.post_vk_source_create(source_data.object_id)  # создаем группу
+            for item in vk_source_fields_dict["items"]:
                 source_data.vk_id = item['id']
         # до теста
         yield source_data
         # после теста
         if url:
-            self.api_client.post_source_delete(source_data.vk_id)
+            self.api_client.post_vk_source_delete(source_data.vk_id)
             assert self.check_source(source_data.vk_id) is False
 
     def get_source_id(self, url):
