@@ -8,7 +8,7 @@ class CampaignPage(BasePage):
     locators = basic_locators.CampaignPageLocators()
     url = 'https://target-sandbox.my.com/dashboard#'
 
-    @allure.step("Step 3 get created campaign name for assertion")
+    @allure.step("Get created campaign name for assertion")
     def get_created_campaign_name(self):
         self.driver.get(CampaignPage.url)
         cell = self.find(self.locators.TOP_CAMPAIGN_CELL)

@@ -20,18 +20,6 @@ class MainPageLocators(BasePageLocators):  # то что на главной(not
     LOGIN_BUTTON = (By.XPATH, "//*[contains(@class,'authForm-module-button')]")
 
     INVALID_INPUT_ERROR_MESSAGE = (By.XPATH, "//*[contains(@class,'notify-module-error')]")
-    # сообщение о невалидном вводе
-
-    # INVALID_LOGIN_PASSWORD_ERROR_MESSAGE = (By.CLASS_NAME, "formMsg_title") сообщение о несовпадении
-    # зарегистрированного или незарегистрированного пользователя и пароля(открывается другая страница)
-
-
-#
-# class ProfilePageLocators(BasePageLocators):  # Страниц профиля
-#     EDIT_FIO_INPUT = (By.XPATH, "//*[contains(@data-name,'fio')]//input[contains(@type,'text')]")
-#     EDIT_PHONE_INPUT = (By.XPATH, "//*[contains(@data-name,'phone')]//input[contains(@type,'text')]")
-#     EDIT_SAVE_BUTTON = (By.XPATH, "//*[contains(@class,'button button_submit')]")
-#     EDIT_SUCCESS_MESSAGE = (By.XPATH, "//*[contains(@data-class-name, 'SuccessView')]")
 
 
 class CampaignPageLocators(BasePageLocators):  # Страница компании

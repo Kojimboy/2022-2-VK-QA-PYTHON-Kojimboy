@@ -46,11 +46,6 @@ class BaseCase:
             self.driver.refresh()
             self.base_page = BasePage(driver)
 
-        # self.base_page: BasePage = (request.getfixturevalue('base_page'))
-        # self.main_page: MainPage = (request.getfixturevalue('main_page')) # иначе не работает is_opened норма
-        # self.campaign_page: CampaignPage = (request.getfixturevalue('campaign_page'))
-        # self.new_campaign_page: NewCampaignPage = (request.getfixturevalue('new_campaign_page'))
-
     @pytest.fixture(scope='session')
     def credentials(self):  # Берем почту и пароль с файла
         with open('files/valid_creds.txt', 'r') as f:

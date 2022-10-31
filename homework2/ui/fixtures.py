@@ -35,8 +35,6 @@ def driver(config, temp_dir, request):  # настройки базового д
     browser = config['browser']
     url = config['url']
     headless = config["headless"]
-    # selenoid = config['selenoid']
-    # vnc = config['vnc']
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {"download.default_directory": temp_dir})
     chrome_options.add_argument("force-device-scale-factor=1")  # для масштаба системы 100%
@@ -44,18 +42,6 @@ def driver(config, temp_dir, request):  # настройки базового д
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--window-size=1920,1080')
-    # if selenoid:
-    #     capabilities = {
-    #         'browserName': 'chrome',
-    #         'version': '106.0',
-    #     }
-    #     if vnc:
-    #         capabilities['enableVNC'] = True
-    #     driver = webdriver.Remote(
-    #         'http://127.0.0.1:4444/wd/hub',
-    #         options=options,
-    #         desired_capabilities=capabilities
-    #     )
     if browser == 'chrome':
         driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager("105.0.5195.19").install()),
                                   options=chrome_options)

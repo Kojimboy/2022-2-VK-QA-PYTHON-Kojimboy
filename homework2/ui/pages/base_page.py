@@ -40,7 +40,6 @@ class BasePage(object):
         profile_button = self.find(self.locators.PROFILE_BUTTON)
         profile_button.click()
 
-    # @allure.step('Click')
     def click(self, locator, timeout=None) -> WebElement:
         self.find(locator, timeout=timeout)
         elem = self.wait(timeout).until(EC.element_to_be_clickable(locator))

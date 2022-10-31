@@ -8,8 +8,6 @@ def pytest_addoption(parser):
     parser.addoption('--url', default='https://target-sandbox.my.com/')
     parser.addoption('--headless', action='store_true')
     parser.addoption('--debug_log', action='store_true')  # для логирования
-    # parser.addoption('--selenoid', action='store_true')
-    # parser.addoption('--vnc', action='store_true')
 
 
 @pytest.fixture(scope='session')

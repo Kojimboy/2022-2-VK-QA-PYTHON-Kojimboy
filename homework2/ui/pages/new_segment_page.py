@@ -10,7 +10,7 @@ class NewSegmentPage(BasePage):
     locators = basic_locators.NewSegmentPageLocators()
     url = 'https://target-sandbox.my.com/segments/segments_list/new'
 
-    @allure.step("Step 2 new segment input filling and saving")
+    @allure.step("New segment input filling and saving")
     def new_app_game_segment(self):
         self.find(self.locators.APP_GAME_SEGMENT).click()
         self.find(self.locators.APPS_GAMES_CHECKBOX).click()
@@ -22,7 +22,7 @@ class NewSegmentPage(BasePage):
         self.find(self.locators.CREATE_SEGMENT_BUTTON).click()
         return segment_name
 
-    @allure.step("Step 3 new vk ok segment input filling and saving")
+    @allure.step("New vk ok segment input filling and saving")
     def new_vk_ok_segment(self, source_name):
         self.find(self.locators.GROUP_VK_OK_SEGMENT).click()
         search_group_input = self.find(self.locators.SEARCH_GROUP_INPUT)

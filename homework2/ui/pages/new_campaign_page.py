@@ -10,7 +10,7 @@ class NewCampaignPage(BasePage):
     locators = basic_locators.NewCampaignPageLocators()
     url = 'https://target-sandbox.my.com/campaign/new'
 
-    @allure.step("Step 2 special campaign input filling and saving")
+    @allure.step("Special campaign input filling and saving")
     def new_special_campaign(self):
         self.find(self.locators.SPECIAL_CAMPAIGN).click()
         url_input = self.find(self.locators.MAIN_URL_INPUT)
