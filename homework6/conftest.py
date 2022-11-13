@@ -22,5 +22,5 @@ def mysql_client(request) -> MysqlClient:
     yield client
 
     close_all_sessions()  # закрываем все сессии
-    if not hasattr(request.config, 'workerinput') or str(request.config.workerinput["workerid"]) == "gw0":
-        client.execute_query(f'DROP database {client.db_name}')  # дропаем всю базу после тестов
+    # if not hasattr(request.config, 'workerinput') or str(request.config.workerinput["workerid"]) == "gw0":
+    #     client.execute_query(f'DROP database {client.db_name}')  # дропаем всю базу после тестов
