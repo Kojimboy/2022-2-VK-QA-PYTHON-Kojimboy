@@ -131,3 +131,5 @@ dmypy.json
 # allure
 */allure-report/
 
+# log file needed
+!homework6/files/access.log

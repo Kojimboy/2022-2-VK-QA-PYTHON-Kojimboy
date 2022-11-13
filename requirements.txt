@@ -4,3 +4,6 @@ selenium
 webdriver_manager
 allure-pytest
 pytest-xdist
+pymysql
+sqlalchemy
+cryptography
