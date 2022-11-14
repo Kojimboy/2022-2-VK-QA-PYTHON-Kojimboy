@@ -6,10 +6,10 @@ from mysql.client import MysqlClient
 
 def pytest_configure(config):
     mysql_client = MysqlClient(user='root', password='pass', db_name='TEST_SQL')
-    if not hasattr(config, 'workerinput') or str(config.workerinput["workerid"]) == "gw0":
+    if not hasattr(config, 'workerinput'):
         mysql_client.create_db()
     mysql_client.connect(db_created=True)
-    if not hasattr(config, 'workerinput') or str(config.workerinput["workerid"]) == "gw0":
+    if not hasattr(config, 'workerinput'):
         mysql_client.create_tables()
 
     config.mysql_client = mysql_client
@@ -22,6 +22,6 @@ def mysql_client(request) -> MysqlClient:
     yield client
 
     close_all_sessions()  # закрываем все сессии
-    if not hasattr(request.config, 'workerinput') or str(request.config.workerinput["workerid"]) == "gw0" \
-            or str(request.config.workerinput["workerid"]) == "gw1":
+    # import pdb; pdb.set_trace()
+    if not hasattr(request.config, 'workerinput'):
         client.execute_query(f'DROP database {client.db_name}')  # дропаем всю базу после тестов
