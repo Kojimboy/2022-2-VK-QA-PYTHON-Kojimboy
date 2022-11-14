@@ -1,9 +1,9 @@
-from models.base_model import Base
 from sqlalchemy import Column, INTEGER, VARCHAR
+
+from models.base_model import Base
 
 
 class TotalMethodsModel(Base):
-
     __tablename__ = 'total_methods'
     __table_arg__ = {'mysql_charset': 'utf8'}
 

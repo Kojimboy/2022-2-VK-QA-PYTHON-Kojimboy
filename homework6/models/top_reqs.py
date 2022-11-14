@@ -1,9 +1,9 @@
-from models.base_model import Base
 from sqlalchemy import Column, INTEGER, VARCHAR
+
+from models.base_model import Base
 
 
 class TopReqsModel(Base):
-
     __tablename__ = 'top_reqs'
     __table_arg__ = {'mysql_charset': 'utf8'}
 

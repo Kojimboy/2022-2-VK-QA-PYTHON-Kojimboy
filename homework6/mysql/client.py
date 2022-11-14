@@ -2,8 +2,12 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
 from models.base_model import Base
+
+# эти импорты нужны для создания таблиц
+
 from models.total_methods import TotalMethodsModel
 from models.top_reqs import TopReqsModel
+from models.top_big_reqs import TopBigReqsModel
 
 
 class MysqlClient:
@@ -34,13 +38,9 @@ class MysqlClient:
         self.execute_query(f'CREATE database {self.db_name}')
 
     def create_tables(self):
-        # if not sqlalchemy.inspect(self.engine).has_table('total_methods'):
-        Base.metadata.create_all(self.engine)
+        Base.metadata.create_all(self.engine)  # создаем все таблицы
 
     def execute_query(self, query, fetch=False):
         res = self.connection.execute(query)
         if fetch:
             return res.fetchall()
-
-    def drop_tables(self):
-        Base.metadata.drop_all()
