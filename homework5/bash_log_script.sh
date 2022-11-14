@@ -9,3 +9,4 @@ echo >>result.txt | echo "Топ 5 самых больших по размеру
 cat access.log | awk '$9 ~/4./' | sort -k10 -nr | head -n 5 | awk '{print $7, "\n" $9, "\n" $10, "\n" $1}'  >> result.txt
 echo >>result.txt | echo "Топ 5 пользователей по количеству запросов, которые завершились серверной (5ХХ) ошибкой" >> result.txt
 cat access.log | awk '$9 ~/5./' | awk '{print $1}' | uniq -c | sort -nr| head -n 5 | awk '{print $2, "\n" $1}' >> result.txt
+
