@@ -38,9 +38,12 @@ class MysqlClient:
         self.execute_query(f'CREATE database {self.db_name}')
 
     def create_tables(self):
-        Base.metadata.create_all(self.engine)  # создаем все таблицы
+        Base.metadata.create_all(self.engine)  # создаем все нужные таблицы
 
     def execute_query(self, query, fetch=False):
         res = self.connection.execute(query)
         if fetch:
             return res.fetchall()
+
+    def drop_db(self):
+        self.execute_query(f'DROP database {self.db_name}')

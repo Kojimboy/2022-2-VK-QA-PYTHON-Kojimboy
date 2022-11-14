@@ -5,7 +5,7 @@ from mysql.client import MysqlClient
 
 
 def pytest_configure(config):
-    mysql_client = MysqlClient(user='root', password='pass', db_name='TEST_SQL')
+    mysql_client = MysqlClient(user='root', password='1234', db_name='TEST_SQL')
     if not hasattr(config, 'workerinput'):
         mysql_client.create_db()
     mysql_client.connect(db_created=True)
@@ -23,5 +23,5 @@ def mysql_client(request) -> MysqlClient:
 
     close_all_sessions()  # закрываем все сессии
     if not hasattr(request.config, 'workerinput'):
-        client.execute_query(f'DROP database {client.db_name}')  # дропаем всю базу после тестов
+        client.drop_db()  # дропаем всю базу после тестов
         # (не дропает в параллельном режиме)
