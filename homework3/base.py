@@ -20,9 +20,9 @@ class ApiBase:
         campaign_id = self.create_campaign(campaign_name=campaign_data.campaign_name,
                                            banner_name=campaign_data.banner_name)
         campaign_data.id = campaign_id
-        # до теста
+
         yield campaign_data
-        # после теста
+
         self.delete_campaign(campaign_id=campaign_id)
         assert self.check_active_top_campaign_id(campaign_id=campaign_id) is False
 
@@ -36,6 +36,7 @@ class ApiBase:
     def check_active_top_campaign_id(self, campaign_id):  # проверяет активные компании на id
         found = False
         all_campaigns_fields_dict = self.api_client.get_top_active_campaign_id()
+
         for item in all_campaigns_fields_dict["items"]:
             print(f"top campaign id in list is {item['id']}")
             if item['id'] == campaign_id:
@@ -45,23 +46,19 @@ class ApiBase:
 
     def delete_campaign(self, campaign_id):
         req = self.api_client.post_campaign_delete(campaign_id)
-        # тут засунуть проверку еще одного запроса
         assert req.status_code == 204
         return req
 
     @pytest.fixture(scope='function')
     def segment(self, object_type, source):
         segment_data = self.builder.segment(object_type=object_type)
-        # if source_id is None # передать source id в post_segment_create
-
         segment_id = self.create_segment(segment_name=segment_data.segment_name,
                                          object_type=segment_data.object_type,
                                          source_id=source.object_id)
         segment_data.id = segment_id
-        # до теста
+
         yield segment_data
-        # после теста
-        # time.sleep(20)
+
         self.api_client.post_segment_delete(segment_id)
         assert self.check_top_segment_id(segment_id=segment_id) is False
 
@@ -91,9 +88,9 @@ class ApiBase:
             vk_source_fields_dict = self.api_client.post_vk_source_create(source_data.object_id)  # создаем группу
             for item in vk_source_fields_dict["items"]:
                 source_data.vk_id = item['id']
-        # до теста
+
         yield source_data
-        # после теста
+
         if url:
             self.api_client.post_vk_source_delete(source_data.vk_id)
             assert self.check_source(source_data.vk_id) is False
