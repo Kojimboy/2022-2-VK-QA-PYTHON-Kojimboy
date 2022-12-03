@@ -1,13 +1,17 @@
+import os
 import re
 from collections import Counter
 
 from sqlalchemy import text
 
+from conftest import repo_root
+
+f = open(f'{repo_root()}{os.sep}files{os.sep}access.log', 'r')
+log_line = f.readlines()
+
 
 def top_methods():
-    with open('homework6/files/access.log', 'r') as f:
-        log_line = f.readlines()
-        method_list = [line.split(' ')[5].strip() for line in log_line]
+    method_list = [line.split(' ')[5].strip() for line in log_line]
 
     uniq_method_sorted = Counter(method_list).most_common()
 
@@ -18,9 +22,7 @@ def top_methods():
 
 
 def top_reqs():
-    with open('homework6/files/access.log', 'r') as f:
-        log_line = f.readlines()
-        url_list = [line.split(' ')[6].strip() for line in log_line]
+    url_list = [line.split(' ')[6].strip() for line in log_line]
 
     uniq_url_sorted = Counter(url_list).most_common()
 
@@ -28,16 +30,18 @@ def top_reqs():
 
 
 def top_big_reqs():
-    with open('homework6/files/access.log', 'r') as f:
-        log_line = f.read()
-        client_error_reqs_list = re.findall(r".* 4\d{2} .*", log_line)
-        res_list = [line.split(' ')[9::-10] + line.split(' ')[6::-7] + line.split(' ')[8::-9] + line.split(' ')[:1] for
-                    line in client_error_reqs_list]
-        for el in res_list:
-            el[0] = int(el[0])
+    log_linee = '\n'.join(log_line)
+    client_error_reqs_list = re.findall(r".* 4\d{2} .*", log_linee)
+    res_list = [line.split(' ')[9::-10] + line.split(' ')[6::-7] + line.split(' ')[8::-9] + line.split(' ')[:1] for
+                line in client_error_reqs_list]
+    for el in res_list:
+        el[0] = int(el[0])
 
-        res_list.sort(reverse=True)
-        return res_list[:20]  # беру 20 записей, потому что ноут улетает при большом количестве записей
+    res_list.sort(reverse=True)
+    return res_list[:20]  # беру 20 записей, потому что ноут улетает при большом количестве записей
+
+
+f.close()
 
 
 class MysqlBuilder:
