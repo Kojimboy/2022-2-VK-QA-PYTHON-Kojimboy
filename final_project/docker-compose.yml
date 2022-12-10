@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+    mysql:
+        networks:
+          - net
+        container_name: mysql_testing
+        hostname: sql_host
+        image: mysql:latest
+        volumes:
+          - ./configuration/init-file.sql:/app/config/mysql-init.sql
+        command: --init-file /app/config/mysql-init.sql
+        environment:
+          - MYSQL_ROOT_PASSWORD=pass
+          - DB_URL=mysql://sql_host:3306/vkeducation
+        healthcheck:
+          test: [ 'CMD', 'mysqladmin', '-uroot', '-ppass', 'ping', '-h', 'sql_host' ]
+          interval: 2s
+          retries: 30
+        ports:
+          - "3306:3306"
+
+    app:
+        networks:
+          - net
+        image: myapp:latest
+        container_name: myapp
+        volumes:
+            - ./configuration:/app/config
+        entrypoint: /app/myapp --config=/app/config/myapp_config.py
+        tty: true
+        ports:
+          - "8080:8080"
+
+        depends_on:
+            mysql:
+               condition: service_healthy
+
+    selenoid:
+      networks:
+        - net
+      image: "aerokube/selenoid:latest"
+      environment:
+        - OVERRIDE_VIDEO_OUTPUT_DIR=D:\Python_projects\2022-2-VK-QA-PYTHON-Kojimboy\final_project\video\
+      volumes:
+        - ./configuration:/etc/browser
+        - /var/run/docker.sock:/var/run/docker.sock
+        - ./video:/opt/selenoid/video/
+      command: [ "-conf", "/etc/browser/browsers.json","-container-network", "net", "-video-output-dir", "/opt/selenoid/video"]
+      ports:
+        - "4444:4444"
+
+    selenoid-ui:
+      networks:
+        - net
+      image: "aerokube/selenoid-ui:latest"
+      container_name: selenoid-ui
+      links:
+        - selenoid
+      command: [  "--selenoid-uri", "http://selenoid:4444"]
+      ports:
+          - "8081:8080"
+
+networks:
+    net:
+      name: net
