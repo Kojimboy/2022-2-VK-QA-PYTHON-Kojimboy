@@ -8,3 +8,4 @@ selenium==4.7.2
 SQLAlchemy==1.4.44
 webdriver-manager==3.8.5
 cryptography==38.0.4
+Faker==15.3.4

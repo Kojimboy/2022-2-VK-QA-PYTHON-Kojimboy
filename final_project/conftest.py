@@ -1,5 +1,3 @@
-import logging
-
 from ui.fixtures import *
 from configuration.myapp_config import APP_SERVICE
 
@@ -67,28 +65,3 @@ def logger(temp_dir, config):
 @pytest.fixture(scope='session')
 def repo_root():
     return os.path.abspath(os.path.join(__file__, os.path.pardir))
-
-
-@pytest.fixture(scope='session')
-def base_temp_dir():
-    if sys.platform.startswith('win'):
-        base_dir = 'C:\\tests'
-    else:
-        base_dir = '/tmp/tests'
-    if os.path.exists(base_dir):
-        shutil.rmtree(base_dir)
-    return base_dir
-
-
-@pytest.fixture(scope='function')
-def temp_dir(request):
-    var = request._pyfuncitem.nodeid
-    var = var.replace("/", "_").replace(":", "_").replace(" ", "_")  # исправляем путь для windows
-    test_dir = os.path.join(request.config.base_temp_dir, var)
-    os.makedirs(test_dir)
-    return test_dir
-
-
-# костыль чтобы русские символы нормально отображались в parametrize
-def pytest_make_parametrize_id(config, val):
-    return repr(val)

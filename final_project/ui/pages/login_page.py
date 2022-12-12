@@ -1,12 +1,15 @@
-from ui.locators import basic_locators
+import allure
+
+from ui.locators import page_locators
 from ui.pages.base_page import BasePage
-from configuration.myapp_config import APP_SERVICE
+from configuration.myapp_config import APP_SERVICE, APP_PORT
 
 
-class LoginPage(BasePage):
-    locators = basic_locators.LoginPageLocators()
-    url = f'http://{APP_SERVICE}:8080/login'
+class LoginPage(BasePage):  # not logged
+    locators = page_locators.LoginPageLocators()
+    url = f'http://{APP_SERVICE}:{APP_PORT}/login'
 
+    @allure.step("login form input filling and submitting")
     def login(self, user, password):
         user_input = self.find(self.locators.USER_NAME_INPUT)
         user_input.clear()

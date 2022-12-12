@@ -4,26 +4,24 @@ import pytest
 from selenium.webdriver.common.by import By
 
 from base import BaseCase
+from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
 
 
 @pytest.mark.UI
 class TestLogin(BaseCase):
-    @pytest.mark.parametrize("user, password", [("Lornuc", "Panda")
-                                                ])  # логин и пароль
-    # @pytest.mark.skip()
-    @allure.step("Go to login page ")
-    def test_valid_login(self, user, password):
-        self.driver.get(LoginPage.url)
-        login_page = LoginPage(self.driver)
-        login = login_page.login(user, password)
-        self.logger.info('Check success login')
-        print(self.driver.title)
-        assert "Welcome2!" in self.driver.title
+    authorize = False
 
-    # def test_sel(self):
-    #     # self.driver.get("http://localhost/login")
-    #     self.driver.refresh()
-    #     print(self.driver.find_element(By.XPATH, "/html/body").text)
-    #     time.sleep(20)
-    #     pass
+    # @pytest.mark.skip()
+    @pytest.mark.Smoke
+    def test_smoke_valid_login(self, credentials, login_page):
+        base_page = login_page.login(*credentials)
+        self.logger.info('Check success login')
+        assert "Welcome!" in self.driver.title
+        login = base_page.get_user_login_names()
+        assert credentials[0] in login[0]
+        base_page.logout()
+        time.sleep(10)
+        # после логина надо выходить
+
+

@@ -21,3 +21,6 @@ CREATE TABLE `test_users` (
     UNIQUE KEY `email` (`email`),
     UNIQUE KEY `ix_test_users_username` (`username`)
 );
+
+INSERT INTO `test_users` VALUES(1, "TestName", "TestSurname", NULL, "TestUsername", "TestPassword",
+"TestEmail@example.net",1, NULL, NULL);

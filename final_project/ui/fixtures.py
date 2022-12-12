@@ -1,17 +1,22 @@
 import os
 import shutil
 import sys
-
 import pytest
+import logging
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
+from faker import Faker
+
 from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
+from ui.pages.reg_page import RegPage
 
+fake = Faker()
 
 
 def pytest_configure(config):
@@ -28,7 +33,7 @@ def pytest_configure(config):
 
 
 @pytest.fixture()
-def driver(config, temp_dir, request):  # настройки базового драйвера с условиями
+def driver(config, temp_dir, request):  # настройки базового драйвера с условиями(перед началом всех тестов)
     browser = config['browser']
     url = config['url']
     headless = config["headless"]
@@ -77,6 +82,60 @@ def driver(config, temp_dir, request):  # настройки базового д
     driver.quit()
 
 
+@pytest.fixture(scope='session')
+def file_path(repo_root):
+    return os.path.join(repo_root, 'files', 'valid_creds.txt')
+
+
+@pytest.fixture(scope='session')
+def credentials(file_path):  # Берем почту и пароль с файла
+    # import pdb;
+    # pdb.set_trace()
+    with open(file_path, 'r') as f:
+        user = f.readline().strip()
+        password = f.readline().strip()
+    return user, password
+
+
+@pytest.fixture(scope='session')
+def base_temp_dir():
+    if sys.platform.startswith('win'):
+        base_dir = 'C:\\tests'
+    else:
+        base_dir = '/tmp/tests'
+    if os.path.exists(base_dir):
+        shutil.rmtree(base_dir)
+    return base_dir
+
+
+@pytest.fixture(scope='function')
+def temp_dir(request):
+    var = request._pyfuncitem.nodeid
+    var = var.replace("/", "_").replace(":", "_").replace(" ", "_")  # исправляем путь для windows
+    test_dir = os.path.join(request.config.base_temp_dir, var)
+    os.makedirs(test_dir)
+    return test_dir
+
+
+@pytest.fixture(scope='session')
+def random_fields():
+    # fields = []
+    # # if not hasattr(config, 'workerinput'):
+    # fields.append(fake.first_name())
+    # fields.append(fake.last_name())
+    # fields.append(fake.name())  # надо сделать так чтобы длину можно было задать
+    # fields.append(fake.email())
+    # fields.append(fake.password(special_chars=False))
+    fields = []
+    # if not hasattr(config, 'workerinput'):
+    fields.append("Johny")
+    fields.append("Johnson")
+    fields.append("JohnyName")  # надо сделать так чтобы длину можно было задать
+    fields.append("example@mail.net")
+    fields.append("fake_password")
+    return fields
+
+
 def get_driver(browser_name, request):  # Драйвер для куки и логина
     chrome_options = Options()
     if request.config.getoption("--headless"):
@@ -96,9 +155,17 @@ def get_driver(browser_name, request):  # Драйвер для куки и ло
 
 @pytest.fixture
 def base_page(driver):
+    driver.get(BasePage.url)
     return BasePage(driver=driver)
 
 
 @pytest.fixture
+def reg_page(driver):
+    driver.get(RegPage.url)
+    return RegPage(driver=driver)
+
+
+@pytest.fixture
 def login_page(driver):
+    driver.get(LoginPage.url)
     return LoginPage(driver=driver)

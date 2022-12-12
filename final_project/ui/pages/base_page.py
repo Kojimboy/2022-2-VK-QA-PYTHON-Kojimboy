@@ -1,22 +1,24 @@
 import time
 
-# import allure
+import allure
+
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from configuration.myapp_config import APP_SERVICE
-from ui.locators import basic_locators
+from configuration.myapp_config import APP_SERVICE, APP_PORT
+from ui.locators import page_locators
+
 
 
 class PageNotOpenedException(Exception):
     pass
 
 
-class BasePage(object):
-    locators = basic_locators.BasePageLocators()
-    url = f"http://{APP_SERVICE}:8080/welcome/"
+class BasePage(object):  # logged
+    locators = page_locators.BasePageLocators()
+    url = f"http://{APP_SERVICE}:{APP_PORT}/welcome/"
 
-    def is_opened(self, timeout=10):
+    def is_opened(self, timeout=30):
         started = time.time()
         while time.time() - started < timeout:
             if self.driver.current_url == self.url:
@@ -35,11 +37,18 @@ class BasePage(object):
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
+    @allure.step("get nickname and user name with surname from base page")
+    def get_user_login_names(self):
+        login = self.find(self.locators.NICKNAME).text
+        username_surname = self.find(self.locators.NAME_SURNAME).text
+        # распарсить нормально
+        return login, username_surname
 
-    # def profile(self):
-    #
-    #     profile_button = self.find(self.locators.PROFILE_BUTTON)
-    #     profile_button.click()
+    @allure.step("simple logout")
+    def logout(self):
+        logout_button = self.find(self.locators.LOGOUT_BUTTON)
+        logout_button.click()
+       # return LoginPage(self.driver) нужен майн page
 
     def click(self, locator, timeout=None) -> WebElement:
         self.find(locator, timeout=timeout)
