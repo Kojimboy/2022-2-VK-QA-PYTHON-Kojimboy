@@ -2,6 +2,11 @@ from selenium.webdriver.common.by import By
 
 
 class BasePageLocators:  # то что на главной странице (logged)
+    HOME_BUTTON = (By.XPATH, ".//li//a[@href='/']")
+    BUG_BUTTON = (By.XPATH, ".//ul/a[@href='/']")
+    PYTHON_BUTTON = (By.XPATH, ".//a[contains(@href, 'https://www.python.org/') and contains(text(), 'Python')]")
+    LINUX_BUTTON = (By.XPATH, ".//a[contains(@href, 'javascript') and contains(text(), 'Linux')]")
+    NETWORK_BUTTON = (By.XPATH, ".//a[contains(@href, 'javascript') and contains(text(), 'Network')]")
     AUTHORIZED_USER_RIGHT_MODULE = (By.XPATH, ".//div[@id='login-name']")
     NICKNAME = (By.XPATH, ".//div[@id='login-name']//li[contains(text(),'Logged as')]")
     NAME_SURNAME = (By.XPATH, ".//div[@id='login-name']//li[contains(text(),'User:')]")

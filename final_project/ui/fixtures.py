@@ -19,19 +19,6 @@ from ui.pages.reg_page import RegPage
 fake = Faker()
 
 
-def pytest_configure(config):
-    if sys.platform.startswith('win'):
-        base_dir = 'C:\\tests'
-    else:
-        base_dir = '/tmp/tests'
-    if not hasattr(config, 'workerunput'):
-        if os.path.exists(base_dir):
-            shutil.rmtree(base_dir)
-        os.makedirs(base_dir)
-
-    config.base_temp_dir = base_dir
-
-
 @pytest.fixture()
 def driver(config, temp_dir, request):  # настройки базового драйвера с условиями(перед началом всех тестов)
     browser = config['browser']
@@ -88,7 +75,7 @@ def file_path(repo_root):
 
 
 @pytest.fixture(scope='session')
-def credentials(file_path):  # Берем почту и пароль с файла
+def credentials(file_path):  # Берем имя и пароль с файла
     # import pdb;
     # pdb.set_trace()
     with open(file_path, 'r') as f:
@@ -123,14 +110,13 @@ def random_fields():
     # # if not hasattr(config, 'workerinput'):
     # fields.append(fake.first_name())
     # fields.append(fake.last_name())
-    # fields.append(fake.name())  # надо сделать так чтобы длину можно было задать
+    # fields.append(fake.user_name()[:])  # надо сделать так чтобы длину можно было задать
     # fields.append(fake.email())
     # fields.append(fake.password(special_chars=False))
     fields = []
-    # if not hasattr(config, 'workerinput'):
     fields.append("Johny")
     fields.append("Johnson")
-    fields.append("JohnyName")  # надо сделать так чтобы длину можно было задать
+    fields.append("JohnyName")
     fields.append("example@mail.net")
     fields.append("fake_password")
     return fields

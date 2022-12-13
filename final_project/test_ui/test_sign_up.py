@@ -13,6 +13,19 @@ class TestSignUp(BaseCase):
 
     @pytest.mark.Smoke
     def test_smoke_valid_sign_up(self, random_fields, reg_page):
+        """
+        Успешная регистрация: использует валидные значения из random_fields
+
+        Шаги выполнения:
+         1. Перейти на страницу регистрации
+         2. заполнить поля Name, Surname, Username, Email, Password и Repeat password
+         3. нажать на чекбокс для соглашения с условиями
+         4. нажать на кнопку Register
+         5. проверить что Username, Name и Surname правильно отображаются на главной странице
+
+        Ожидаемый результат:
+        Успешная регистрация и успешный вход на главную страницу под своим именем
+        """
         base_page = reg_page.sign_up(*random_fields)
         self.logger.info('Assert success register ')
         assert self.driver.current_url == BasePage.url
@@ -32,6 +45,20 @@ class TestSignUp(BaseCase):
     ])
     @pytest.mark.Critical
     def test_sign_up_input_validation(self, locator_name, max_length, field_name, reg_page):
+        """
+        Валидация полей регистрации: использует валидные значения из parametrize
+
+        Шаги выполнения:
+         1. Перейти на страницу регистрации
+         2. проверить что поля Name, Surname, Username, Email, Password и Repeat password обязательны
+         3. проверить что поле имеет ограничение макс длины вводимых символов
+         4. проверить что поле не превышает макс длину вводимых символов
+         5. проверить что поле имеет ограничение мин длину вводимых символов >= 1
+         6. проверить что поля имеет правильно отображаемое название
+
+        Ожидаемый результат:
+        У поля присутствует валидация
+        """
         el = reg_page.find(locator_name)
 
         self.logger.info('Get field attributes')
@@ -43,9 +70,10 @@ class TestSignUp(BaseCase):
         self.logger.info('Assert validation in fields')
         if not locator_name == RegPage.locators.MIDDLE_NAME_INPUT:
             assert "required" in attrs
-        assert attrs.get("placeholder") == field_name
+        assert "maxlength" in attrs
         assert int(attrs.get("maxlength")) <= max_length
         assert int(attrs.get("minlength")) >= 1
+        assert attrs.get("placeholder") == field_name
 
     @pytest.mark.parametrize("name, surname, middle_name, user_name, email, password", [
         ("Николай", "Николаевич", "Николаев", "Nickolas", "SimpleEmail@mail.ru", "SimplePassword"),
@@ -57,16 +85,28 @@ class TestSignUp(BaseCase):
         ("nickolas’vending", "nickolaevich’vending.gon", "Nick-olaev", "nickname-this", "new_email@mail.net",
          "passwordings$"),
     ],
-        ids=['Cirrilic_basic', 'Latin_special', 'Numbers', 'Cirillic_Special', 'Latin-_special'])
+                             ids=['Cirrilic_basic', 'Latin_special', 'Numbers', 'Cirillic_Special', 'Latin-_special'])
     @pytest.mark.Critical
     def test_valid_sign_up(self, name, surname, middle_name, user_name, email, password, reg_page):
+        """
+        Успешная регистрация: использует валидные значения из parametrize
+
+        Шаги выполнения:
+         1. Перейти на страницу регистрации
+         2. заполнить поля Name, Surname, Middle name, Username, Email, Password и Repeat password
+         3. нажать на чекбокс для соглашения с условиями
+         4. нажать на кнопку Register
+         5. проверить что Username, Name и Surname правильно отображаются на главной странице
+
+        Ожидаемый результат:
+        Успешная регистрация и успешный вход на главную страницу под своим именем
+        """
         base_page = reg_page.sign_up(name, surname, user_name, email, password, middle_name=middle_name)
         self.logger.info('Assert success register ')
         assert "Welcome!" in self.driver.title
         login, name_surname = base_page.get_user_login_names()
         assert user_name in login
         assert name and surname in name_surname
-        # после тестов надо очистить базу
 
     @pytest.mark.Critical
     @pytest.mark.skip()

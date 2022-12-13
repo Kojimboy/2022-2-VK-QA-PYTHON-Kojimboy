@@ -9,7 +9,6 @@ from configuration.myapp_config import APP_SERVICE, APP_PORT
 from ui.locators import page_locators
 
 
-
 class PageNotOpenedException(Exception):
     pass
 
@@ -18,7 +17,7 @@ class BasePage(object):  # logged
     locators = page_locators.BasePageLocators()
     url = f"http://{APP_SERVICE}:{APP_PORT}/welcome/"
 
-    def is_opened(self, timeout=30):
+    def is_opened(self, timeout=60):
         started = time.time()
         while time.time() - started < timeout:
             if self.driver.current_url == self.url:
@@ -44,11 +43,12 @@ class BasePage(object):  # logged
         # распарсить нормально
         return login, username_surname
 
-    @allure.step("simple logout")
+    @allure.step("logout from main page")
     def logout(self):
         logout_button = self.find(self.locators.LOGOUT_BUTTON)
         logout_button.click()
-       # return LoginPage(self.driver) нужен майн page
+
+    # return LoginPage(self.driver) нужен майн page
 
     def click(self, locator, timeout=None) -> WebElement:
         self.find(locator, timeout=timeout)
