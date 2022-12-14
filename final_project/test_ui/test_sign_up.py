@@ -110,6 +110,5 @@ class TestSignUp(BaseCase):
 
     @pytest.mark.Critical
     @pytest.mark.skip()
-    @allure.step("Go to reg page ")
     def test_invalid_sign_up(self, name, surname, middle_name, user_name, email, password, reg_page):
         pass

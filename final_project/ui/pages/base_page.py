@@ -17,7 +17,7 @@ class BasePage(object):  # logged
     locators = page_locators.BasePageLocators()
     url = f"http://{APP_SERVICE}:{APP_PORT}/welcome/"
 
-    def is_opened(self, timeout=60):
+    def is_opened(self, timeout=100):
         started = time.time()
         while time.time() - started < timeout:
             if self.driver.current_url == self.url:

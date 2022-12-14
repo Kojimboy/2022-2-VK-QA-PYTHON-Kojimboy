@@ -63,6 +63,19 @@ class ApiClient:
         except ResponseStatusCodeException as exc:
             assert False, exc
 
+    def post_logout(self):
+        headers = {
+            "Cookie": f"session= {self.session.cookies['session']}"
+        }
+
+        location = urljoin(self.base_url, 'logout')
+        try:
+            logout_request = self._request(method='GET', location=location, headers=headers,
+                                           jsonify=False, expected_status=200)
+            return logout_request
+        except ResponseStatusCodeException as exc:
+            assert False, exc
+
     def post_user_create(self, name, surname, username, password, email, middlename=None):
         headers = {
             "Content-Type": "application/json"
@@ -79,6 +92,6 @@ class ApiClient:
 
         location = urljoin(self.base_url, 'api/user')
         create_user_request = self._request(method='POST', location=location, json=data, headers=headers,
-                                            expected_status=210)
+                                            expected_status=201)
 
         return create_user_request

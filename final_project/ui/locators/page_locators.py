@@ -5,8 +5,17 @@ class BasePageLocators:  # то что на главной странице (log
     HOME_BUTTON = (By.XPATH, ".//li//a[@href='/']")
     BUG_BUTTON = (By.XPATH, ".//ul/a[@href='/']")
     PYTHON_BUTTON = (By.XPATH, ".//a[contains(@href, 'https://www.python.org/') and contains(text(), 'Python')]")
+    PYTHON_HISTORY_BUTTON = (By.XPATH, ".//a[contains(@href,'https://en.wikipedia.org/wiki/History_of_Python')]")
+    FLASK_BUTTON = (By.XPATH, ".//a[contains(@href,'https://flask.palletsprojects.com/en/1.1.x/#')]")
+
     LINUX_BUTTON = (By.XPATH, ".//a[contains(@href, 'javascript') and contains(text(), 'Linux')]")
     NETWORK_BUTTON = (By.XPATH, ".//a[contains(@href, 'javascript') and contains(text(), 'Network')]")
+
+    API_BUTTON = (By.XPATH, ".//a[contains(@href,'https://en.wikipedia.org/wiki/Application_programming_interface')]")
+    FUTURE_BUTTON = (By.XPATH, ".//a[contains(@href,'https://www.popularmechanics.com/technology/infrastructure"
+                               "/a29666802/future-of-the-internet/')]")
+    SMTP_BUTTON = (By.XPATH, ".//a[contains(@href,'https://ru.wikipedia.org/wiki/SMTP')]")
+
     AUTHORIZED_USER_RIGHT_MODULE = (By.XPATH, ".//div[@id='login-name']")
     NICKNAME = (By.XPATH, ".//div[@id='login-name']//li[contains(text(),'Logged as')]")
     NAME_SURNAME = (By.XPATH, ".//div[@id='login-name']//li[contains(text(),'User:')]")

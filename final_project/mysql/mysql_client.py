@@ -32,3 +32,6 @@ class MysqlClient:
 
     def drop_users(self):
         self.execute_query("delete from test_users where id!= 1;")
+
+    def drop_logged_test_user(self):
+        self.execute_query("update test_users set active = NULL, start_active_time = NULL where id = 1;")

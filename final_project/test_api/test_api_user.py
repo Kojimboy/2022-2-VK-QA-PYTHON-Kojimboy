@@ -6,7 +6,7 @@ from base import ApiBase
 @pytest.mark.API
 class TestApiUser(ApiBase):
     @pytest.mark.parametrize("name, surname, username, password, email, middlename", [
-        ("Николай", "Николаевич", "Nickolas", "SimplePassword", "SimpleEmail@mail.ru", "Николаев"),
+        ("Иван", "Иванов", "Ivanov", "SimplePassword", "AnotherEmail@mail.ru", "Николаев"),
     ],
                              ids=['Cirrilic_basic'])
     @pytest.mark.Smoke
@@ -15,14 +15,12 @@ class TestApiUser(ApiBase):
         Добавление нового пользователя: использует валидные значения из parametrize
 
         Шаги выполнения:
-         1. Перейти на страницу регистрации
-         2. заполнить поля Name, Surname, Middle name, Username, Email, Password и Repeat password
-         3. нажать на чекбокс для соглашения с условиями
-         4. нажать на кнопку Register
-         5. проверить что Username, Name и Surname правильно отображаются на главной странице
+         1. Выполнить запрос на логин используя метод post_login
+         2. выполнить запрос на добавление пользователя используя метод post_user_create с значениями из parametrize
+         3. проверить что пользователь появился в БД # еще не сделано
 
         Ожидаемый результат:
-
+        Запрос выполнился и пользователь был добавлен в бд со своими параметрами
         """
 
         pass

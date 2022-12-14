@@ -29,10 +29,14 @@ def pytest_configure(config):
 
     config.base_temp_dir = base_dir
 
-    # mysql_client = MysqlClient(user='test_qa', password='qa_test', db_name='vkeducation')
-    mysql_client = MysqlClient(user='root', password='pass', db_name='vkeducation')
+    mysql_client = MysqlClient(user='test_qa', password='qa_test', db_name='vkeducation')
+    # mysql_client = MysqlClient(user='root', password='pass', db_name='vkeducation')
     mysql_client.connect()
     config.mysql_client = mysql_client
+
+    # api_client = ApiClient(base_url=f'http://{APP_SERVICE}:{APP_PORT}/', username="TestUsername", password="TestPassword")
+    #
+    # config.api_client = api_client
 
 
 @pytest.fixture(scope='session')
@@ -90,8 +94,32 @@ def repo_root():
 
 
 @pytest.fixture(scope='session')
+def file_path(repo_root):
+    return os.path.join(repo_root, 'files', 'valid_creds.txt')
+
+
+@pytest.fixture(scope='session')
+def credentials(file_path):  # Берем имя и пароль с файла
+    # import pdb;
+    # pdb.set_trace()
+    with open(file_path, 'r') as f:
+        user = f.readline().strip()
+        password = f.readline().strip()
+    return user, password
+
+
+@pytest.fixture(scope='session')
 def api_client(credentials, config):
     return ApiClient(base_url=config['url'], username=credentials[0], password=credentials[1])
+
+# @pytest.fixture(scope='session')
+# def api_client(request) -> ApiClient:
+#     client = request.config.api_client
+#
+#     yield client
+#     # if not hasattr(request.config, 'workerinput'):
+#     client.post_logout()
+#     # return ApiClient(base_url=config['url'], username=credentials[0], password=credentials[1])
 
 
 @pytest.fixture(scope='session')
@@ -104,5 +132,7 @@ def mysql_client(request) -> MysqlClient:
 
     # close_all_sessions()  # закрываем все сессии
     # if not hasattr(request.config, 'workerinput'):
-    client.drop_users()  # дропаем всю базу после тестов
+    client.drop_users()  # удаляем пользователей которых добавили
+    client.drop_logged_test_user()
+
     close_all_sessions()

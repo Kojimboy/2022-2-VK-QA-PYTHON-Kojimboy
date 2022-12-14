@@ -1,18 +1,31 @@
 import os
+from contextlib import contextmanager
 
 import allure
 import pytest
 from _pytest.fixtures import FixtureRequest
 
-from api.api_client import ResponseStatusCodeException
+from api.api_client import ResponseStatusCodeException, ApiClient
 from api.builder import Builder
 from mysql.mysql_client import MysqlClient
+from ui.pages.base_page import BasePage
 
 
 class BaseCase:
     driver = None
     authorize = True
     logger = None
+
+    @contextmanager
+    def switch_to_window(self, current, close=False):
+        for w in self.driver.window_handles:
+            if w != current:
+                self.driver.switch_to.window(w)
+                break
+        yield
+        if close:
+            self.driver.close()
+        self.driver.switch_to.window(current)
 
     @pytest.fixture(scope='function', autouse=True)
     def setup(self, driver, config, logger, api_client, mysql_client, request: FixtureRequest):  # на каждый запуск
@@ -21,21 +34,18 @@ class BaseCase:
         self.logger = logger
 
         self.api_client = api_client
+        # self.api_client: ApiClient = api_client
         self.builder = Builder()
 
         self.client: MysqlClient = mysql_client
 
         if self.authorize:
-            self.api_client.post_login()
+            cookies = request.getfixturevalue('cookies')
+            for cookie in cookies:
+                self.driver.add_cookie(cookie)
 
         # self.base_page = BasePage(driver)
-
-        # if self.authorize:
-        #     cookies = request.getfixturevalue('cookies')
-        #     for cookie in cookies:
-        #         self.driver.add_cookie(cookie)
-        #     self.driver.refresh()
-        #     self.base_page = BasePage(driver)
+        # self.base_page: BasePage = (request.getfixturevalue('base_page'))
 
     @pytest.fixture(scope='function', autouse=True)
     def ui_report(self, driver, request, temp_dir):
@@ -55,10 +65,23 @@ class BaseCase:
             with open(test_logs, 'r') as f:
                 allure.attach(f.read(), 'test.log', allure.attachment_type.TEXT)
 
-    def get_methods(self, **filters):
-        self.client.session.commit()
-        return self.client.session.query(TotalMethodsModel). \
-            filter_by(**filters).order_by(TotalMethodsModel.count.desc()).all()
+    # sql методы
+    # def get_methods(self, **filters):
+    #     self.client.session.commit()
+    #     return self.client.session.query(TotalMethodsModel). \
+    #         filter_by(**filters).order_by(TotalMethodsModel.count.desc()).all()
+
+    @pytest.fixture(scope='session')
+    def cookies(self, credentials, api_client):  # берем куки для логина используя api
+        api_client.post_login()
+        cookies = []
+        for cookie in api_client.session.cookies:
+            cookies.append({
+                'name': cookie.name,
+                'path': cookie.path,
+                'value': cookie.value
+            })
+        return cookies
 
 
 class ApiBase(BaseCase):
@@ -84,8 +107,6 @@ class ApiBase(BaseCase):
             req = self.api_client.post_user_create(name=name, surname=surname,
                                                    username=username, password=password,
                                                    email=email, middlename=middlename)
-            import pdb;
-            pdb.set_trace()
             return req  # корректное сообщение проверить
         except ResponseStatusCodeException as exc:
             assert False, exc

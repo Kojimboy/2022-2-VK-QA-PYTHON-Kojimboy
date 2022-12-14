@@ -66,22 +66,23 @@ def driver(config, temp_dir, request):  # настройки базового д
     driver.maximize_window()
     driver.implicitly_wait(10)
     yield driver
+
     driver.quit()
 
 
-@pytest.fixture(scope='session')
-def file_path(repo_root):
-    return os.path.join(repo_root, 'files', 'valid_creds.txt')
+# @pytest.fixture(scope='session')
+# def file_path(repo_root):
+#     return os.path.join(repo_root, 'files', 'valid_creds.txt')
 
 
-@pytest.fixture(scope='session')
-def credentials(file_path):  # Берем имя и пароль с файла
-    # import pdb;
-    # pdb.set_trace()
-    with open(file_path, 'r') as f:
-        user = f.readline().strip()
-        password = f.readline().strip()
-    return user, password
+# @pytest.fixture(scope='session')
+# def credentials(file_path):  # Берем имя и пароль с файла
+#     # import pdb;
+#     # pdb.set_trace()
+#     with open(file_path, 'r') as f:
+#         user = f.readline().strip()
+#         password = f.readline().strip()
+#     return user, password
 
 
 @pytest.fixture(scope='session')
@@ -120,23 +121,6 @@ def random_fields():
     fields.append("example@mail.net")
     fields.append("fake_password")
     return fields
-
-
-def get_driver(browser_name, request):  # Драйвер для куки и логина
-    chrome_options = Options()
-    if request.config.getoption("--headless"):
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--window-size=1920,1080')
-    if browser_name == 'chrome':
-        browser = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().install()),
-                                   options=chrome_options)
-    elif browser_name == 'firefox':
-        browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-    else:
-        raise RuntimeError(f'Unsupported browser: "{browser_name}"')
-    browser.maximize_window()
-    return browser
 
 
 @pytest.fixture
