@@ -5,17 +5,19 @@ services:
           - net
         container_name: mysql_testing
         hostname: sql_host
-        image: mysql:latest
+        image: percona:latest
         volumes:
           - ./configuration/init-file.sql:/app/config/mysql-init.sql
         command: --init-file /app/config/mysql-init.sql
         environment:
+          - TZ
           - MYSQL_ROOT_PASSWORD=pass
           - DB_URL=mysql://sql_host:3306/vkeducation
         healthcheck:
-          test: [ 'CMD', 'mysqladmin', '-uroot', '-ppass', 'ping', '-h', 'sql_host' ]
-          interval: 2s
-          retries: 30
+          test: [ 'CMD', 'mysqladmin', '-uroot', '-p${MYSQL_ROOT_PASSWORD}', 'ping', '-h', 'sql_host' ]
+          interval: 1m
+          timeout: 10s
+          retries: 60
         ports:
           - "3306:3306"
 
@@ -26,6 +28,8 @@ services:
         container_name: myapp
         volumes:
             - ./configuration:/app/config
+        environment:
+          - TZ
         entrypoint: /app/myapp --config=/app/config/myapp_config.py
         tty: true
         ports:
@@ -40,12 +44,14 @@ services:
         - net
       image: "aerokube/selenoid:latest"
       environment:
-        - OVERRIDE_VIDEO_OUTPUT_DIR=D:\Python_projects\2022-2-VK-QA-PYTHON-Kojimboy\final_project\video\
+        - TZ
+        - OVERRIDE_VIDEO_OUTPUT_DIR=${PWD}/video/
       volumes:
         - ./configuration:/etc/browser
         - /var/run/docker.sock:/var/run/docker.sock
-        - ./video:/opt/selenoid/video/
-      command: [ "-conf", "/etc/browser/browsers.json","-container-network", "net", "-video-output-dir", "/opt/selenoid/video"]
+        - ./video:/opt/selenoid/video
+      command: [ "-conf", "/etc/browser/browsers.json","-container-network", "net",
+                 "-session-attempt-timeout", "2m", "-video-output-dir", "/opt/selenoid/video"]
       ports:
         - "4444:4444"
 
@@ -54,6 +60,8 @@ services:
         - net
       image: "aerokube/selenoid-ui:latest"
       container_name: selenoid-ui
+      environment:
+        - TZ
       links:
         - selenoid
       command: [  "--selenoid-uri", "http://selenoid:4444"]
