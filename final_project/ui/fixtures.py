@@ -37,7 +37,7 @@ def driver(config, temp_dir, request):  # настройки базового д
 
     if selenoid:
         capabilities = {
-            'acceptInsecureCerts': True,
+            "acceptInsecureCerts": True,
             "browserName": "chrome",
             "browserVersion": "108.0",
             "applicationContainers": ["myapp"]
@@ -51,7 +51,7 @@ def driver(config, temp_dir, request):  # настройки базового д
                 }
             }
         driver = webdriver.Remote(
-            command_executor="http://localhost:4444/wd/hub",
+            command_executor="http://127.0.0.1:4444/wd/hub",
             options=chrome_options,
             desired_capabilities=capabilities
         )
