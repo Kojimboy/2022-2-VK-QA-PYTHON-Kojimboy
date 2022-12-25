@@ -7,8 +7,6 @@ services:
         hostname: sql_host
         image: percona:latest
         volumes:
-          - /etc/timezone:/etc/timezone:ro
-          - /etc/localtime:/etc/localtime:ro
           - ./configuration/init-file.sql:/app/config/mysql-init.sql
         command: --init-file /app/config/mysql-init.sql
         environment:
@@ -53,7 +51,8 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
         - ./video:/opt/selenoid/video
       command: [ "-conf", "/etc/browser/browsers.json","-container-network", "net",
-                 "-session-attempt-timeout", "2m", "-video-output-dir", "/opt/selenoid/video"]
+                 "-session-attempt-timeout", "2m", "-service-startup-timeout", "2m",
+                 "-video-output-dir", "/opt/selenoid/video"]
       ports:
         - "4444:4444"
 
@@ -62,9 +61,6 @@ services:
         - net
       image: "aerokube/selenoid-ui:latest"
       container_name: selenoid-ui
-      volumes:
-        - /etc/timezone:/etc/timezone:ro
-        - /etc/localtime:/etc/localtime:ro
       environment:
         - TZ
       links:
