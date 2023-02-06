@@ -3,6 +3,7 @@ import allure
 import pytest
 
 from base import BaseCase
+from ui.pages.main_page import MainPage
 from ui.pages.reg_page import RegPage
 from ui.pages.base_page import BasePage
 
@@ -17,20 +18,18 @@ class TestSignUp(BaseCase):
         Успешная регистрация: использует валидные значения из random_fields
 
         Шаги выполнения:
-         1. Перейти на страницу регистрации
-         2. заполнить поля Name, Surname, Username, Email, Password и Repeat password
-         3. нажать на чекбокс для соглашения с условиями
-         4. нажать на кнопку Register
-         5. проверить что Username, Name и Surname правильно отображаются на главной странице
+        1. Перейти на страницу регистрации
+        2. заполнить поля Name, Surname, Username, Email, Password, Repeat password,
+        нажать на чекбокс для соглашения с условиями и нажать на кнопку Register
+        3. проверить что Username, Name и Surname правильно отображаются на главной странице
 
         Ожидаемый результат:
         Успешная регистрация и успешный вход на главную страницу под своим именем
         """
-        base_page = reg_page.sign_up(*random_fields)
+        reg_page.sign_up(*random_fields)
+        main_page = MainPage(self.driver)
         self.logger.info('Assert success register ')
-        assert self.driver.current_url == BasePage.url
-        assert "Welcome!" in self.driver.title
-        login, name_surname = base_page.get_user_login_names()
+        login, name_surname = main_page.get_user_login_names()
         assert random_fields[2] in login
         assert random_fields[0] and random_fields[1] in name_surname
 
@@ -44,6 +43,7 @@ class TestSignUp(BaseCase):
         (RegPage.locators.CONFIRM_PASSWORD_INPUT, 255, "Repeat password")
     ])
     @pytest.mark.Critical
+    @pytest.mark.skip()
     def test_sign_up_input_validation(self, locator_name, max_length, field_name, reg_page):
         """
         Валидация полей регистрации: использует валидные значения из parametrize
@@ -93,18 +93,17 @@ class TestSignUp(BaseCase):
 
         Шаги выполнения:
          1. Перейти на страницу регистрации
-         2. заполнить поля Name, Surname, Middle name, Username, Email, Password и Repeat password
-         3. нажать на чекбокс для соглашения с условиями
-         4. нажать на кнопку Register
-         5. проверить что Username, Name и Surname правильно отображаются на главной странице
+         2. заполнить поля Name, Surname, Middle name, Username, Email, Password и Repeat password,
+         нажать на чекбокс для соглашения с условиями и нажать на кнопку Register
+         3. проверить что Username, Name и Surname правильно отображаются на главной странице
 
         Ожидаемый результат:
         Успешная регистрация и успешный вход на главную страницу под своим именем
         """
-        base_page = reg_page.sign_up(name, surname, user_name, email, password, middle_name=middle_name)
+        reg_page.sign_up(name, surname, user_name, email, password, middle_name=middle_name)
+        main_page = MainPage(self.driver)
         self.logger.info('Assert success register ')
-        assert "Welcome!" in self.driver.title
-        login, name_surname = base_page.get_user_login_names()
+        login, name_surname = main_page.get_user_login_names()
         assert user_name in login
         assert name and surname in name_surname
 

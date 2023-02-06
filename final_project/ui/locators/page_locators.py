@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-class BasePageLocators:  # то что на главной странице (logged)
+class MainPageLocators:  # то что на главной странице (logged)
     HOME_BUTTON = (By.XPATH, ".//li//a[@href='/']")
     BUG_BUTTON = (By.XPATH, ".//ul/a[@href='/']")
     PYTHON_BUTTON = (By.XPATH, ".//a[contains(@href, 'https://www.python.org/') and contains(text(), 'Python')]")

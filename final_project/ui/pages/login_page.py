@@ -20,4 +20,3 @@ class LoginPage(BasePage):  # not logged
         pass_input.send_keys(password)
         login_button = self.find(self.locators.LOGIN_BUTTON)
         login_button.click()
-        return BasePage(self.driver)

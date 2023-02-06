@@ -11,6 +11,7 @@ from mysql.mysql_client import MysqlClient
 from ui.pages.base_page import BasePage
 
 
+
 class BaseCase:
     driver = None
     authorize = True
@@ -34,18 +35,21 @@ class BaseCase:
         self.logger = logger
 
         self.api_client = api_client
-        # self.api_client: ApiClient = api_client
         self.builder = Builder()
 
         self.client: MysqlClient = mysql_client
+
+        self.base_page = BasePage(driver)
 
         if self.authorize:
             cookies = request.getfixturevalue('cookies')
             for cookie in cookies:
                 self.driver.add_cookie(cookie)
 
-        # self.base_page = BasePage(driver)
         # self.base_page: BasePage = (request.getfixturevalue('base_page'))
+        # self.main_page: MainPage = (request.getfixturevalue('main_page'))
+        # self.login_page: LoginPage = (request.getfixturevalue('login_page'))
+        # self.reg_page: RegPage = (request.getfixturevalue('reg_page'))
 
     @pytest.fixture(scope='function', autouse=True)
     def ui_report(self, driver, request, temp_dir):
@@ -65,6 +69,7 @@ class BaseCase:
             with open(test_logs, 'r') as f:
                 allure.attach(f.read(), 'test.log', allure.attachment_type.TEXT)
 
+    # todo добавить модели таблиц для того чтобы использовать методы
     # sql методы
     # def get_methods(self, **filters):
     #     self.client.session.commit()

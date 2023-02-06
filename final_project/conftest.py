@@ -30,13 +30,8 @@ def pytest_configure(config):
     config.base_temp_dir = base_dir
 
     mysql_client = MysqlClient(user='test_qa', password='qa_test', db_name='vkeducation')
-    # mysql_client = MysqlClient(user='root', password='pass', db_name='vkeducation')
     mysql_client.connect()
     config.mysql_client = mysql_client
-
-    # api_client = ApiClient(base_url=f'http://{APP_SERVICE}:{APP_PORT}/', username="TestUsername", password="TestPassword")
-    #
-    # config.api_client = api_client
 
 
 @pytest.fixture(scope='session')
@@ -112,15 +107,6 @@ def credentials(file_path):  # Берем имя и пароль с файла
 def api_client(credentials, config):
     return ApiClient(base_url=config['url'], username=credentials[0], password=credentials[1])
 
-# @pytest.fixture(scope='session')
-# def api_client(request) -> ApiClient:
-#     client = request.config.api_client
-#
-#     yield client
-#     # if not hasattr(request.config, 'workerinput'):
-#     client.post_logout()
-#     # return ApiClient(base_url=config['url'], username=credentials[0], password=credentials[1])
-
 
 @pytest.fixture(scope='session')
 def mysql_client(request) -> MysqlClient:
@@ -129,6 +115,7 @@ def mysql_client(request) -> MysqlClient:
     yield client
     # import pdb;
     # pdb.set_trace()
+
 
     # close_all_sessions()  # закрываем все сессии
     # if not hasattr(request.config, 'workerinput'):

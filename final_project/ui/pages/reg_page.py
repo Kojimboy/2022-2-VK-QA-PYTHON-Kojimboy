@@ -40,4 +40,3 @@ class RegPage(BasePage):
         terms.click()
         reg_button = self.find(self.locators.REGISTER_BUTTON)
         reg_button.click()
-        return BasePage(self.driver)

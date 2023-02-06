@@ -14,6 +14,7 @@ from faker import Faker
 
 from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
+from ui.pages.main_page import MainPage
 from ui.pages.reg_page import RegPage
 
 fake = Faker()
@@ -45,9 +46,9 @@ def driver(config, temp_dir, request):  # настройки базового д
         if vnc:
             capabilities = {
                 "selenoid:options": {
-                    "enableVNC": True,
+                    # "enableVNC": True,
                     "enableVideo": True,
-                    "videoName": "my-cool-video.mp4"
+                    "videoName": f"{os.environ.get('PYTEST_CURRENT_TEST').replace('/', '__').replace(':', '_').split(' ')[0]}.mp4"
                 }
             }
         driver = webdriver.Remote(
@@ -105,6 +106,7 @@ def temp_dir(request):
     return test_dir
 
 
+# todo сделать нормальный рандомайзер для конкретных полей
 @pytest.fixture(scope='session')
 def random_fields():
     # fields = []
@@ -125,8 +127,14 @@ def random_fields():
 
 @pytest.fixture
 def base_page(driver):
-    driver.get(BasePage.url)
+    # driver.get(BasePage.url)
     return BasePage(driver=driver)
+
+
+@pytest.fixture
+def main_page(driver):
+    driver.get(MainPage.url)
+    return MainPage(driver=driver)
 
 
 @pytest.fixture

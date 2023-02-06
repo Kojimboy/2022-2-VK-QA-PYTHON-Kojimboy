@@ -13,11 +13,11 @@ class PageNotOpenedException(Exception):
     pass
 
 
-class BasePage(object):  # logged
-    locators = page_locators.BasePageLocators()
-    url = f"http://{APP_SERVICE}:{APP_PORT}/welcome/"
+class BasePage(object):
+    # locators = page_locators.BasePageLocators()
+    url = f"http://{APP_SERVICE}:{APP_PORT}/"
 
-    def is_opened(self, timeout=100):
+    def is_opened(self, timeout=15):
         started = time.time()
         while time.time() - started < timeout:
             if self.driver.current_url == self.url:
@@ -27,6 +27,8 @@ class BasePage(object):  # logged
     def __init__(self, driver):
         self.driver = driver
         self.is_opened()
+        # Todo можно добавить проверку уникального элемента для каждой страницы,
+        #  чтобы точно знать что находишься на ней
 
     def wait(self, timeout=None):
         if timeout is None:
@@ -36,19 +38,8 @@ class BasePage(object):  # logged
     def find(self, locator, timeout=None):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
-    @allure.step("get nickname and user name with surname from base page")
-    def get_user_login_names(self):
-        login = self.find(self.locators.NICKNAME).text
-        username_surname = self.find(self.locators.NAME_SURNAME).text
-        # распарсить нормально
-        return login, username_surname
-
-    @allure.step("logout from main page")
-    def logout(self):
-        logout_button = self.find(self.locators.LOGOUT_BUTTON)
-        logout_button.click()
-
-    # return LoginPage(self.driver) нужен майн page
+    # def navigate_to_page(self):
+    #     self.driver.get(self.url)
 
     def click(self, locator, timeout=None) -> WebElement:
         self.find(locator, timeout=timeout)

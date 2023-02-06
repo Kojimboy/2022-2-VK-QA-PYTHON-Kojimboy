@@ -1,6 +1,6 @@
 DROP USER IF EXISTS 'test_qa';
-
-CREATE DATABASE IF NOT EXISTS vkeducation;
+DROP DATABASE IF EXISTS vkeducation;
+CREATE DATABASE vkeducation;
 CREATE USER 'test_qa'@'%' IDENTIFIED BY 'qa_test';
 GRANT ALL ON vkeducation.* TO 'test_qa'@'%';
 FLUSH PRIVILEGES;
@@ -24,3 +24,7 @@ CREATE TABLE `test_users` (
 
 INSERT INTO `test_users` VALUES(1, "TestName", "TestSurname", NULL, "TestUsername", "TestPassword",
 "TestEmail@example.net",1, NULL, NULL);
+
+
+INSERT INTO `test_users` VALUES(2, "TestNddame", "На русском", NULL, "TestUserdfsname", "TestPassword",
+"TestEmail@exampdssle.net",1, NULL, NULL);
