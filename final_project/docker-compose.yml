@@ -27,7 +27,7 @@ services:
         restart: always
         networks:
           - net
-        image: myapp:latest
+        image: qudie/myapp:latest
         container_name: myapp
         volumes:
             - ./configuration:/app/config
@@ -59,32 +59,32 @@ services:
       ports:
         - "4444:4444"
 
-#    selenoid-ui:
-#      networks:
-#        - net
-#      image: "aerokube/selenoid-ui:latest"
-#      container_name: selenoid-ui
-#      environment:
-#        - TZ
-#      links:
-#        - selenoid
-#      command: [  "--selenoid-uri", "http://selenoid:4444"]
-#      ports:
-#          - "8081:8080"
+    selenoid-ui:
+     networks:
+       - net
+     image: "aerokube/selenoid-ui:latest"
+     container_name: selenoid-ui
+     environment:
+       - TZ
+     links:
+       - selenoid
+     command: [  "--selenoid-uri", "http://selenoid:4444"]
+     ports:
+         - "8081:8080"
 
-#    adminer:
-#      restart: always
-#      networks:
-#        - net
-#      image: "adminer:latest"
-#      container_name: adminer
-#      environment:
-#        - TZ
-#        - ADMINER_DESIGN=mvt
-#      links:
-#        - mysql:mysql_testing
-#      ports:
-#        - "8082:8080"
+    adminer:
+     restart: always
+     networks:
+       - net
+     image: "adminer:latest"
+     container_name: adminer
+     environment:
+       - TZ
+       - ADMINER_DESIGN=mvt
+     links:
+       - mysql:mysql_testing
+     ports:
+       - "8082:8080"
 
 
 

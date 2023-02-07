@@ -2,7 +2,7 @@ import os
 import shutil
 import sys
 import pytest
-import logging
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -31,12 +31,13 @@ def driver(config, temp_dir, request):  # настройки базового д
     chrome_options = Options()
     chrome_options.add_experimental_option("prefs", {"download.default_directory": temp_dir})
     chrome_options.add_argument("force-device-scale-factor=1")  # для масштаба системы 100%
-    if request.config.getoption("--headless"):
+    if headless:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--window-size=1920,1080')
 
     if selenoid:
+        # configuration.myapp_config.APP_SERVICE = "myapp"
         capabilities = {
             "acceptInsecureCerts": True,
             "browserName": "chrome",
@@ -46,7 +47,7 @@ def driver(config, temp_dir, request):  # настройки базового д
         if vnc:
             capabilities = {
                 "selenoid:options": {
-                    # "enableVNC": True,
+                    "enableVNC": True,
                     "enableVideo": True,
                     "videoName": f"{os.environ.get('PYTEST_CURRENT_TEST').replace('/', '__').replace(':', '_').split(' ')[0]}.mp4"
                 }
@@ -63,6 +64,8 @@ def driver(config, temp_dir, request):  # настройки базового д
         driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     else:
         raise RuntimeError(f'Unsupported browser: "{browser}"')
+    import pdb;
+    pdb.set_trace()
     driver.get(url)
     driver.maximize_window()
     driver.implicitly_wait(10)

@@ -1,14 +1,19 @@
+import logging
+from decouple import config
+
 from sqlalchemy.orm import close_all_sessions
 
 from mysql.mysql_client import MysqlClient
 from ui.fixtures import *
-from configuration.myapp_config import APP_SERVICE, APP_PORT
+from configuration.myapp_config import APP_PORT
+
 from api.api_client import ApiClient
 
+APP_HOST = config('APP_SERVICE')
 
 def pytest_addoption(parser):
     parser.addoption('--browser', default='chrome')
-    parser.addoption('--url', default=f'http://{APP_SERVICE}:{APP_PORT}/')
+    parser.addoption('--url', default=f"http://{APP_HOST}:{APP_PORT}/")
     parser.addoption('--headless', action='store_true')
 
     parser.addoption('--debug_log', action='store_true')  # для логирования
@@ -42,10 +47,7 @@ def config(request):
     debug_log = request.config.getoption('--debug_log')
 
     if request.config.getoption('--selenoid'):
-        if request.config.getoption('--vnc'):
-            vnc = True
-        else:
-            vnc = False
+        vnc = bool(request.config.getoption('--vnc'))
         selenoid = 'http://127.0.0.1:4444/wd/hub'
     else:
         selenoid = None
