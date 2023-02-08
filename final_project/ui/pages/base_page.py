@@ -1,11 +1,12 @@
 import time
 
 import allure
+from decouple import config
 
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from configuration.myapp_config import APP_SERVICE, APP_PORT
+from configuration.myapp_config import APP_PORT
 from ui.locators import page_locators
 
 
@@ -15,7 +16,7 @@ class PageNotOpenedException(Exception):
 
 class BasePage(object):
     # locators = page_locators.BasePageLocators()
-    url = f"http://{APP_SERVICE}:{APP_PORT}/"
+    url = f"http://{config('APP_SERVICE')}:{APP_PORT}/"
 
     def is_opened(self, timeout=15):
         started = time.time()

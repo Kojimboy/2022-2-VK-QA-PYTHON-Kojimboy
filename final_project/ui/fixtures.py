@@ -24,8 +24,7 @@ fake = Faker()
 def driver(config, temp_dir, request):  # настройки базового драйвера с условиями(перед началом всех тестов)
     browser = config['browser']
     url = config['url']
-    headless = config["headless"]
-
+    headless = config['headless']
     selenoid = config['selenoid']
     vnc = config['vnc']
     chrome_options = Options()
@@ -37,12 +36,11 @@ def driver(config, temp_dir, request):  # настройки базового д
         chrome_options.add_argument('--window-size=1920,1080')
 
     if selenoid:
-        # configuration.myapp_config.APP_SERVICE = "myapp"
         capabilities = {
             "acceptInsecureCerts": True,
             "browserName": "chrome",
             "browserVersion": "108.0",
-            "applicationContainers": ["myapp"]
+            "applicationContainers": ["myapp"],
         }
         if vnc:
             capabilities = {
@@ -64,8 +62,6 @@ def driver(config, temp_dir, request):  # настройки базового д
         driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     else:
         raise RuntimeError(f'Unsupported browser: "{browser}"')
-    import pdb;
-    pdb.set_trace()
     driver.get(url)
     driver.maximize_window()
     driver.implicitly_wait(10)

@@ -1,14 +1,15 @@
 import allure
+from decouple import config
 
 from ui.locators import page_locators
 from ui.pages.base_page import BasePage
-from configuration.myapp_config import APP_SERVICE, APP_PORT
+from configuration.myapp_config import APP_PORT
 from ui.pages.login_page import LoginPage
 
 
 class MainPage(BasePage):  # logged
     locators = page_locators.MainPageLocators()
-    url = f'http://{APP_SERVICE}:{APP_PORT}/welcome/'
+    url = f"http://{config('APP_SERVICE')}:{APP_PORT}/welcome/"
 
     def __init__(self, driver):
         super().__init__(driver)

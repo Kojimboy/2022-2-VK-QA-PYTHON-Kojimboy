@@ -1,13 +1,14 @@
 import allure
+from decouple import config
 
 from ui.locators import page_locators
 from ui.pages.base_page import BasePage
-from configuration.myapp_config import APP_SERVICE, APP_PORT
+from configuration.myapp_config import APP_PORT
 
 
 class RegPage(BasePage):
     locators = page_locators.RegPageLocators()
-    url = f'http://{APP_SERVICE}:{APP_PORT}/reg'
+    url = f"http://{config('APP_SERVICE')}:{APP_PORT}/reg"
 
     @allure.step("sign_up form input filling and submitting")
     def sign_up(self, name, surname, username, email, password, middle_name=None):

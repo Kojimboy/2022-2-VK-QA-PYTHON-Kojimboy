@@ -11,6 +11,7 @@ from api.api_client import ApiClient
 
 APP_HOST = config('APP_SERVICE')
 
+
 def pytest_addoption(parser):
     parser.addoption('--browser', default='chrome')
     parser.addoption('--url', default=f"http://{APP_HOST}:{APP_PORT}/")
@@ -23,10 +24,7 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
-    if sys.platform.startswith('win'):
-        base_dir = 'C:\\tests'
-    else:
-        base_dir = '/tmp/tests'
+    base_dir = 'C:\\tests' if sys.platform.startswith('win') else '/tmp/tests'
     if not hasattr(config, 'workerunput'):
         if os.path.exists(base_dir):
             shutil.rmtree(base_dir)
@@ -117,7 +115,6 @@ def mysql_client(request) -> MysqlClient:
     yield client
     # import pdb;
     # pdb.set_trace()
-
 
     # close_all_sessions()  # закрываем все сессии
     # if not hasattr(request.config, 'workerinput'):
